@@ -123,7 +123,7 @@ preset_texts = {
     "Legitimate: Meeting Schedule": "Hi team, let's reschedule our quarterly project review meeting to Thursday at 3:00 PM in Conference Room B. Let me know if that works."
 }
 
-# Hero Title
+# Main Hero Header
 st.markdown("""
 <div class="hero-container">
     <div class="hero-title">🛡️ NextGen Threat & Phishing Detection Engine</div>
@@ -143,9 +143,7 @@ with tab1:
         placeholder="e.g. URGENT: Your corporate login credentials expire today. Click here to verify..."
     )
 
-    col_btn1, col_btn2 = st.columns([1, 4])
-    with col_btn1:
-        run_scan = st.button("⚡ Run Threat Analysis", type="primary", use_container_width=True)
+    run_scan = st.button("⚡ Run Threat Analysis", type="primary")
 
     if run_scan:
         if not user_email.strip():
@@ -168,3 +166,35 @@ with tab1:
                 if prediction == 1:
                     st.error("🚨 THREAT / PHISHING DETECTED")
                 else:
+                    st.success("✅ LEGITIMATE / CLEAN")
+            with m2:
+                st.metric(label="Threat Probability", value=f"{threat_prob:.1f}%")
+            with m3:
+                st.metric(label="Confidence Level", value=f"{max(probabilities)*100:.1f}%")
+
+            st.progress(float(threat_prob / 100))
+
+            st.markdown("#### Deep Heuristic Indicators")
+            h_col1, h_col2 = st.columns(2)
+            
+            with h_col1:
+                st.markdown("**Detected Links & URLs:**")
+                if len(urls) > 0:
+                    for u in urls:
+                        st.markdown(f"- `{u}` ⚠️ *(External Hyperlink)*")
+                else:
+                    st.write("No external links found in the message body.")
+
+            with h_col2:
+                st.markdown("**Urgency & Phishing Triggers:**")
+                if len(urgency_words) > 0:
+                    st.write(", ".join([f"`{w}`" for w in urgency_words]))
+                else:
+                    st.write("No typical urgency manipulation words detected.")
+
+# TAB 2: Batch Analysis
+with tab2:
+    st.info("Upload an MBOX file to evaluate entire mailbox archives concurrently.")
+    uploaded_file = st.file_uploader("Upload .mbox file", type=["mbox"])
+    if uploaded_file is not None:
+        st.success(f"File uploaded: {uploaded_file.name}. Ready for batch processing.")
