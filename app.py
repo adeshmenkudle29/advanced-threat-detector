@@ -69,7 +69,7 @@ st.markdown("""
 </style>
 
 <div class="floating-watermark">
-    Made By Adesh, Atharv, Rutuja and Tejaswini
+    Made By Kartik,Prathmesh,Uatkarsha and Siddant
 </div>
 """, unsafe_allow_html=True)
 
